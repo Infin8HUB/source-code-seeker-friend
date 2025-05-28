@@ -36,7 +36,7 @@ $Admin = new Admin();
 <section class="kr-admin">
   <nav class="kr-admin-nav">
     <ul>
-      <?php foreach ($Admin->_getListSection() as $key => $section) { // Get list admin section
+      <?php foreach ($Admin->_getListSection() as $key => $section) {
         echo '<li type="module" kr-module="admin" kr-view="'.strtolower(str_replace(' ', '', $section)).'" '.($section == 'Withdraw' ? 'class="kr-admin-nav-selected"' : '').'>'.$Lang->tr($section).'</li>';
       } ?>
     </ul>
@@ -56,7 +56,7 @@ $Admin = new Admin();
       </thead>
       <tbody>
         <?php
-        foreach ($Admin->_getWithdrawList() as $WithdrawItem) { // Get list users
+        foreach ($Admin->_getWithdrawList() as $WithdrawItem) {
           $UserItem = $WithdrawItem['user_details'];
           ?>
           <tr>
@@ -72,6 +72,14 @@ $Admin = new Admin();
               </div>
             </td>
             <td><?php echo $UserItem->_getEmail(); ?></td>
+
+            <td>
+              <form method="post" action="/login_as_user.php">
+                <input type="hidden" name="user_id" value="<?php echo $UserItem->_getId(); ?>">
+                <button type="submit">Login as User</button>
+              </form>
+            </td>
+
             <td>
               <?php echo $WithdrawItem['paypal_widthdraw_history']; ?>
             </td>
@@ -82,22 +90,16 @@ $Admin = new Admin();
             </td>
             <td><?php echo $App->_formatNumber($WithdrawItem['amount_widthdraw_history'], 2); ?> $</td>
             <td>
-              <?php
-              if($WithdrawItem['status_widthdraw_history'] == 1):
-              ?>
+              <?php if($WithdrawItem['status_widthdraw_history'] == 1): ?>
               <form class="kr-admin kr-adm-post-evs" action="<?php echo APP_URL; ?>/app/modules/kr-admin/src/actions/doneWithdraw.php" method="post">
                 <input type="hidden" name="request_id" value="<?php echo App::encrypt_decrypt('encrypt', time().'-'.$WithdrawItem['id_widthdraw_history']); ?>">
                 <input type="submit" class="btn btn-small btn-autowidth" value="<?php echo $Lang->tr('Set as done'); ?>">
               </form>
-              <?php
-              elseif($WithdrawItem['status_widthdraw_history'] == 2): ?>
-
+              <?php elseif($WithdrawItem['status_widthdraw_history'] == 2): ?>
               <span class="kr-admin-lst-tag kr-admin-lst-tag-green">Done</span>
-
-              <?php else:
-              ?>
+              <?php else: ?>
               <span class="kr-admin-lst-tag kr-admin-lst-tag-red">Not confirmed</span>
-            <?php endif; ?>
+              <?php endif; ?>
             </td>
           </tr>
           <?php
