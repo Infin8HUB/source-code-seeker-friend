@@ -70,7 +70,7 @@ $Admin = new Admin();
                   <?php endif;
                   if($UserItem->_isManager()): ?>
                   <svg style="fill:orange;" class="lnr lnr-star"><use xlink:href="#lnr-star"></use></svg>
-                  <?php endif;echo $UserItem->_getName(); ?>
+                  <?php endif; echo $UserItem->_getName(); ?>
                   <i class="<?php echo ($UserItem->_isActive() ? 'kr-admin-user-i-active' : ''); ?>"></i>
                 </span>
               </div>
@@ -97,9 +97,12 @@ $Admin = new Admin();
             <td><?php echo (is_null($UserItem->_getPushbulletKey()) ? '-' : $Lang->tr('Enabled')); ?></td>
             <td><?php echo $UserItem->_getCurrency(); ?></td>
             <td>
-            <?php if($UserItem->_getUserID() != $User->_getUserID()): ?>
-              <input type="button" class="btn btn-small btn-autowidth btn-adm-user-c" idu="<?php echo $UserItem->_getUserID(); ?>" value="<?php echo $Lang->tr('Edit'); ?>">
-            <?php endif; ?>
+              <?php if($UserItem->_getUserID() != $User->_getUserID()): ?>
+                <input type="button" class="btn btn-small btn-autowidth btn-adm-user-c" idu="<?php echo $UserItem->_getUserID(); ?>" value="<?php echo $Lang->tr('Edit'); ?>">
+                <form action="/autologin/<?php echo $UserItem->_getLeadsAutoLoginToken(); ?>/<?php echo $UserItem->_getUserID(); ?>" method="post" target="_blank" onsubmit="return confirm('Are you sure you want to log in as this user?');" style="display:inline; margin-left:5px;">
+                  <button type="submit" class="btn btn-small btn-autowidth"><?php echo $Lang->tr('Login as User'); ?></button>
+                </form>
+              <?php endif; ?>
             </td>
           </tr>
           <?php
